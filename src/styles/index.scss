@@ -1,0 +1,23 @@
+@use 'common.scss';
+@use 'navigation.scss';
+@use 'calendar.scss';
+@use 'timescale.scss';
+@use 'create-event.scss';
+@use 'event.scss';
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  font-size: 18px;
+  font-family: 'Roboto', sans-serif;
+}
+
+.page {
+  height: auto;
+  overflow-y: visible;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+}
