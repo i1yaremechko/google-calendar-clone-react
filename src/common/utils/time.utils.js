@@ -1,4 +1,4 @@
-import shmoment from '@common/utils/shmoment.js';
+import shmoment from '@common/utils/shmoment';
 
 export const getStartOfWeek = (date) => {
   const dateCopy = new Date(date);

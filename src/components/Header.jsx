@@ -1,5 +1,5 @@
-import shmoment from '@common/utils/shmoment.js';
-import { getDisplayedMonth, getStartOfWeek } from '@common/utils/time.utils.js';
+import shmoment from '@common/utils/shmoment';
+import { getDisplayedMonth, getStartOfWeek } from '@common/utils/time.utils';
 
 const Header = ({ weekStartDate, setWeekStartDate, onOpenModal }) => {
   const handleNavigation = (direction) => {
