@@ -1,13 +1,23 @@
+import { getStartOfWeek } from '@common/utils/time.utils.js';
+import Header from "@components/Header";
+import { useState } from 'react';
 
-const App = () => {
+function App() {
+  const [weekStartDate, setWeekStartDate] = useState(getStartOfWeek(new Date()));
+
   return (
-    <main className="page">
-      <div style={{ padding: '40px', fontFamily: 'sans-serif', textAlign: 'center' }}>
-        <h1 style={{ fontSize: '2.5rem', marginBottom: '10px' }}>📅 Google Calendar Clone</h1>
-        <p style={{ color: '#5f6368' }}>The project has been successfully initialized from scratch! Sass and Vite are working.</p>
-      </div>
-    </main>
+    <>
+      <Header 
+        weekStartDate={weekStartDate} 
+        setWeekStartDate={setWeekStartDate} 
+      />
+      <main className="calendar">
+        <div style={{ padding: '20px', textAlign: 'center' }}>
+          <h1>Google Calendar React Clone Under Construction 🚀</h1>
+        </div>
+      </main>
+    </>
   );
-};
+}
 
 export default App;
