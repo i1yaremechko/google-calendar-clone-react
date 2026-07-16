@@ -5,9 +5,29 @@ import Navigation from './components/Calendar/Navigation';
 import Timescale from './components/Calendar/Timescale';
 import Week from './components/Calendar/Week';
 
+const testEvents = [
+  {
+    id: '1',
+    title: 'Test 1',
+    description: 'testing',
+    dateFrom: new Date(new Date().setHours(9, 0, 0, 0)),
+    dateTo: new Date(new Date().setHours(10, 0, 0, 0)),
+    color: '#34a853',
+  },
+  {
+    id: '2',
+    title: 'Test 2',
+    description: 'testing',
+    dateFrom: new Date(new Date().setHours(14, 30, 0, 0)),
+    dateTo: new Date(new Date().setHours(16, 0, 0, 0)),
+    color: '#4285f4',
+  }
+];
+
 function App() {
   const [weekStartDate, setWeekStartDate] = useState(getStartOfWeek(new Date()));
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [events, setEvents] = useState(testEvents);
 
   return (
     <div className="page">
@@ -21,10 +41,11 @@ function App() {
           <div className="calendar__gmt-label">GMT+03</div>
           <Navigation weekStartDate={weekStartDate} />
         </header>
+        
         <div className="calendar__body">
           <div className="calendar__week-container">
             <Timescale />
-            <Week weekStartDate={weekStartDate} />
+            <Week weekStartDate={weekStartDate} events={events} />
           </div>
         </div>
       </section>
