@@ -1,6 +1,8 @@
 import { getStartOfWeek } from '@common/utils/time.utils';
 import Header from "@components/Header";
 import { useState } from 'react';
+import CreateEvent from './components/Calendar/CreateEvent';
+import Modal from './components/Calendar/Modal';
 import Navigation from './components/Calendar/Navigation';
 import Timescale from './components/Calendar/Timescale';
 import Week from './components/Calendar/Week';
@@ -29,6 +31,10 @@ function App() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [events, setEvents] = useState(testEvents);
 
+  const handleCreateEvent = (newEvent) => {
+    setEvents((prevEvents) => [...prevEvents, newEvent]);
+  };
+
   return (
     <div className="page">
       <Header 
@@ -49,6 +55,13 @@ function App() {
           </div>
         </div>
       </section>
+
+      <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)}>
+        <CreateEvent
+          onClose={() => setIsModalOpen(false)}
+          onCreateEvent={handleCreateEvent}
+        />
+      </Modal>
     </div>
   );
 }
