@@ -13,7 +13,8 @@ const Week = ({ weekStartDate }) => {
         return (
           <Day 
             key={key} 
-            dataDay={dayOfMonth} 
+            dataDay={dayOfMonth}
+            dayDate={dayDate}
             dayEvents={[]} 
           />
         );
