@@ -2,6 +2,9 @@
 
 A modern, component-driven Google Calendar clone migrated from native JavaScript to **React 19**, powered by **Vite** for blistering fast builds and **Sass (SCSS)** for modular styling.
 
+## 🔗 Live Demo
+[View the Live Project](https://i1yaremechko.github.io/google-calendar-clone-react/)
+
 ## 🚀 Architecture Overview (Feature-Based)
 
 The project follows a scalable, feature-based folder structure to keep code modular and isolated:

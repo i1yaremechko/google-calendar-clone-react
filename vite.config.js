@@ -5,6 +5,7 @@ import { defineConfig } from 'vite';
 // https://vite.dev/config/
 export default defineConfig({
   plugins: [react()],
+  base: '/google-calendar-clone-react/',
   resolve: {
     alias: {
       '@common': fileURLToPath(new URL('./src/common', import.meta.url)),
