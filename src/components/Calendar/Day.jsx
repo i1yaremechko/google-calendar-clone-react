@@ -2,7 +2,7 @@
 import Event from "@features/Events/Event";
 import CurrentTimeLine from "./CurrentTimeLine";
 
-const Day = ({ dataDay, dayEvents, dayDate, onEventClick }) => {
+const Day = ({ dataDay, dayEvents = [], dayDate, onEventClick }) => {
   const isToday = new Date().toDateString() === dayDate.toDateString();
 
   const filteredEvents = dayEvents.filter(

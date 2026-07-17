@@ -12,6 +12,7 @@ import Header from "@components/Header";
 import CreateEvent from '@features/Events/CreateEvent';
 import { getItem, setItem } from '@features/services/eventsStorage';
 import { useEffect, useState } from 'react';
+import { createEvent, deleteEvent, getEventsList } from './features/services/eventsGateWay';
 
 function App() {
   const [weekStartDate, setWeekStartDate] = useState(() => {
@@ -29,6 +30,11 @@ function App() {
   });
 
   useEffect(() => {
+    getEventsList()
+      .then((eventsData) => setEvents(eventsData));
+  }, []);
+
+  useEffect(() => {
     setItem(STORAGE_KEY_DISPLAYED_WEEK_START, weekStartDate);
   }, [weekStartDate]);
 
@@ -42,12 +48,23 @@ function App() {
   };
 
   const handleCreateEvent = (newEvent) => {
-    setEvents((prevEvents) => [...prevEvents, newEvent]);
+    createEvent(newEvent)
+      .then((createdEventFromServer) => {
+        const adaptedEvent = {
+          ...createdEventFromServer,
+          dateFrom: new Date(createdEventFromServer.start || createdEventFromServer.dateFrom),
+          dateTo: new Date(createdEventFromServer.end || createdEventFromServer.dateTo),
+        };
+        setEvents((prevEvents) => [...prevEvents, adaptedEvent]);
+      })
   };
 
   const handleDeleteEvent = (id) => {
-    setEvents((prevEvents) => prevEvents.filter(event => event.id !== id));
-    handleSelectEvent(null);
+    deleteEvent(id)
+      .then(() => {
+        setEvents((prevEvents) => prevEvents.filter(event => event.id !== id));
+        handleSelectEvent(null);
+      });
   };
 
   return (

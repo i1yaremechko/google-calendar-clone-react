@@ -15,7 +15,7 @@ const Week = ({ weekStartDate, events, onEventClick }) => {
             key={key} 
             dataDay={dayOfMonth}
             dayDate={dayDate}
-            dayEvents={events}
+            dayEvents={events || []}
             onEventClick={onEventClick} 
           />
         );
