@@ -4,34 +4,34 @@ import {
   STORAGE_KEY_SELECTED_EVENT_ID
 } from '@common/constants';
 import { getStartOfWeek } from '@common/utils/time.utils';
+import { validateEvent } from '@common/utils/validate.util';
 import Modal from '@components/Calendar/Modal';
 import Navigation from '@components/Calendar/Navigation';
 import Timescale from '@components/Calendar/Timescale';
 import Week from '@components/Calendar/Week';
 import Header from "@components/Header";
 import CreateEvent from '@features/Events/CreateEvent';
+import UpdateEvent from '@features/Events/UpdateEvent';
+import { createEvent, deleteEvent, getEventsList, updateEvent } from '@features/services/eventsGateWay';
 import { getItem, setItem } from '@features/services/eventsStorage';
 import { useEffect, useState } from 'react';
-import { createEvent, deleteEvent, getEventsList } from './features/services/eventsGateWay';
 
 function App() {
   const [weekStartDate, setWeekStartDate] = useState(() => {
     return getItem(STORAGE_KEY_DISPLAYED_WEEK_START) || getStartOfWeek(new Date());
   });
-
   const [isModalOpen, setIsModalOpen] = useState(false);
-  
   const [events, setEvents] = useState(() => {
     return getItem(STORAGE_KEY_EVENTS) || [];
   });
-
   const [selectedEventId, setSelectedEventId] = useState(() => {
     return getItem(STORAGE_KEY_SELECTED_EVENT_ID);
   });
 
+  const selectedEvent = events.find(event => event.id === selectedEventId);
+
   useEffect(() => {
-    getEventsList()
-      .then((eventsData) => setEvents(eventsData));
+    getEventsList().then((eventsData) => setEvents(eventsData));
   }, []);
 
   useEffect(() => {
@@ -48,15 +48,42 @@ function App() {
   };
 
   const handleCreateEvent = (newEvent) => {
-    createEvent(newEvent)
-      .then((createdEventFromServer) => {
-        const adaptedEvent = {
-          ...createdEventFromServer,
-          dateFrom: new Date(createdEventFromServer.start || createdEventFromServer.dateFrom),
-          dateTo: new Date(createdEventFromServer.end || createdEventFromServer.dateTo),
-        };
-        setEvents((prevEvents) => [...prevEvents, adaptedEvent]);
-      })
+    const validation = validateEvent(newEvent, events);
+    if (!validation.isValid) {
+      alert(validation.message);
+      return;
+    }
+
+    createEvent(newEvent).then((createdEventFromServer) => {
+      const adaptedEvent = {
+        ...createdEventFromServer,
+        dateFrom: new Date(createdEventFromServer.start || createdEventFromServer.dateFrom),
+        dateTo: new Date(createdEventFromServer.end || createdEventFromServer.dateTo),
+      };
+      setEvents((prevEvents) => [...prevEvents, adaptedEvent]);
+      setIsModalOpen(false);
+    });
+  };
+
+  const handleUpdateEvent = (id, updatedData) => {
+    const otherEvents = events.filter(event => event.id !== id);
+    const validation = validateEvent(updatedData, otherEvents);
+    
+    if (!validation.isValid) {
+      alert(validation.message);
+      return;
+    }
+
+    updateEvent(id, updatedData).then((updatedEventFromServer) => {
+      const adaptedEvent = {
+        ...updatedEventFromServer,
+        dateFrom: new Date(updatedEventFromServer.start || updatedEventFromServer.dateFrom),
+        dateTo: new Date(updatedEventFromServer.end || updatedEventFromServer.dateTo),
+      };
+      
+      setEvents((prevEvents) => prevEvents.map(event => event.id === id ? adaptedEvent : event));
+      handleSelectEvent(null);
+    });
   };
 
   const handleDeleteEvent = (id) => {
@@ -95,29 +122,16 @@ function App() {
       <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)}>
         <CreateEvent
           onClose={() => setIsModalOpen(false)}
-          onCreateEvent={handleCreateEvent}
+          onSubmitEvent={handleCreateEvent}
         />
       </Modal>
 
-      {selectedEventId && (
-        <>
-          <div className='overlay' onClick={() => {
-            handleSelectEvent(null)
-          }}></div>
-          <div className='modal'>
-            <div className='modal__content popup__content'>
-              <button
-                className='delete-event-btn'
-                onClick={() => {
-                  handleDeleteEvent(selectedEventId)
-                }}
-              >
-                Delete Event
-              </button>
-            </div>
-          </div>
-        </>
-      )}
+      <UpdateEvent 
+        event={selectedEvent}
+        onClose={() => handleSelectEvent(null)}
+        onUpdateEvent={handleUpdateEvent}
+        onDeleteEvent={handleDeleteEvent}
+      />
     </div>
   );
 }
