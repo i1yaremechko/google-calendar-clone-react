@@ -1,7 +1,8 @@
-import CurrentTimeLine from "./CUrrentTimeLine";
-import Event from "./Event";
 
-const Day = ({ dataDay, dayEvents, dayDate }) => {
+import Event from "@features/Events/Event";
+import CurrentTimeLine from "./CurrentTimeLine";
+
+const Day = ({ dataDay, dayEvents, dayDate, onEventClick }) => {
   const isToday = new Date().toDateString() === dayDate.toDateString();
 
   const filteredEvents = dayEvents.filter(
@@ -36,6 +37,7 @@ const Day = ({ dataDay, dayEvents, dayDate }) => {
             top={top}
             height={height}
             color={event.color}
+            onClick={() => onEventClick(event.id)}
           />
         );
       })}

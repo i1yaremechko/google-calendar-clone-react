@@ -1,7 +1,7 @@
 import { generateWeekRange } from '@common/utils/time.utils.js';
 import Day from './Day.jsx';
 
-const Week = ({ weekStartDate, events }) => {
+const Week = ({ weekStartDate, events, onEventClick }) => {
   const weekDays = generateWeekRange(weekStartDate);
 
   return (
@@ -15,7 +15,8 @@ const Week = ({ weekStartDate, events }) => {
             key={key} 
             dataDay={dayOfMonth}
             dayDate={dayDate}
-            dayEvents={events} 
+            dayEvents={events}
+            onEventClick={onEventClick} 
           />
         );
       })}
